@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "ayursutra/frontend/package.json", "use": "@vercel/static-build", "config": { "distDir": "build" } },
+    { "src": "ayursutra/backend/server.js", "use": "@vercel/node" }
+  ],
+  "functions": {
+    "ayursutra/backend/server.js": {
+      "runtime": "nodejs18.x",
+      "maxDuration": 10,
+      "memory": 1024
+    }
+  },
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/ayursutra/backend/server.js" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ],
+  "env": { "NODE_ENV": "production" }
+}

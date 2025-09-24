@@ -1,0 +1,33 @@
+{
+  "name": "ayursutra-panchakarma-system",
+  "version": "1.0.0",
+  "description": "Complete Panchakarma Management System with AI Scheduling",
+  "private": true,
+  "scripts": {
+    "dev": "cd ayursutra && npm run dev",
+    "server": "cd ayursutra && npm run server",
+    "client": "cd ayursutra && npm run client",
+    "vercel-build": "cd ayursutra/frontend && npm install && npm run build",
+    "start": "cd ayursutra/frontend && npm start",
+    "build": "cd ayursutra/frontend && npm run build",
+    "test": "cd ayursutra/frontend && npm test",
+    "install-deps": "cd ayursutra && npm install && cd frontend && npm install && cd ../backend && npm install"
+  },
+  "keywords": [
+    "ayurveda",
+    "panchakarma",
+    "healthcare",
+    "scheduling",
+    "ai",
+    "wellness"
+  ],
+  "author": "AyurSutra Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
