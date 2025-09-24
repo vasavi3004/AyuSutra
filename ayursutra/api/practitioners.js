@@ -1,7 +1,5 @@
-const express = require('express');
-const router = express.Router();
+import { getPatientsByPractitioner } from '../backend/data/practitionerPatients';
 
-// In-memory practitioners list (derived from treatments doctor mapping for demo)
 const practitioners = [
   { id: 'D101', name: 'Dr. Ananya Iyer', specialty: 'Panchakarma Specialist' },
   { id: 'D102', name: 'Dr. Rohan Deshmukh', specialty: 'Detox & Rejuvenation' },
@@ -23,24 +21,25 @@ const practitioners = [
   { id: 'D603', name: 'Dr. Mahesh I', specialty: 'Colon Therapy' },
 ];
 
-const { getPatientsByPractitioner } = require('../data/practitionerPatients');
-
-// List all practitioners (demo)
-router.get('/', (req, res) => {
-  res.json({ success: true, practitioners });
-});
-
-// Get specific practitioner by id
-router.get('/:id', (req, res) => {
-  const doc = practitioners.find(p => p.id === req.params.id);
-  if (!doc) return res.status(404).json({ success: false, message: 'Practitioner not found' });
-  res.json({ success: true, practitioner: doc });
-});
-
-// Get patients for a practitioner
-router.get('/:id/patients', (req, res) => {
-  const patients = getPatientsByPractitioner(req.params.id);
-  res.json({ success: true, practitionerId: req.params.id, patients });
-});
-
-module.exports = router;
+export default function handler(req, res) {
+  const { method, url } = req;
+  // GET /api/practitioners
+  if (method === 'GET' && url.endsWith('/practitioners')) {
+    return res.status(200).json({ success: true, practitioners });
+  }
+  // GET /api/practitioners/:id
+  const idMatch = url.match(/\/practitioners\/(D\d{3})$/);
+  if (method === 'GET' && idMatch) {
+    const doc = practitioners.find(p => p.id === idMatch[1]);
+    if (!doc) return res.status(404).json({ success: false, message: 'Practitioner not found' });
+    return res.status(200).json({ success: true, practitioner: doc });
+  }
+  // GET /api/practitioners/:id/patients
+  const patientsMatch = url.match(/\/practitioners\/(D\d{3})\/patients$/);
+  if (method === 'GET' && patientsMatch) {
+    const patients = getPatientsByPractitioner(patientsMatch[1]);
+    return res.status(200).json({ success: true, practitionerId: patientsMatch[1], patients });
+  }
+  // Default: Method not allowed or endpoint not found
+  return res.status(404).json({ success: false, message: 'Endpoint not found or method not allowed' });
+}
